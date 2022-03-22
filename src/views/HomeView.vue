@@ -18,15 +18,20 @@
     </thead>
     
      <tbody  v-for="stock in stockInfo" :key="stock.id" >
-        <TableBody :stock="stock" @t="t" :stockInfo="stockInfo"  @delete="handleDelete" />
+        <TableBody :stock="stock"  :stockInfo="stockInfo"  @delete="handleDelete" />
+<!-- @t="t" removed -->
       </tbody>
-
+  
+    
   </table>
-   
+
    <h2 style="width: 100%; height: 95%; color: #ddd" class="d-flex justify-content-center align-items-center" v-else>البيانات غير متوفرة</h2>
+  <h5> المجموع الكلي لاسعار الاسهم هو : {{ totalPrices }}</h5>
+  <h5> المجموع الكلي للاسهم هو : {{ totalStocks }}</h5>
+  <p>test {{ stocks }}</p>
   </section>
 
-
+ 
 </template>
 
 <script>
@@ -39,6 +44,9 @@ export default {
   data() {
     return {
       stockInfo: [],
+      stocks : this.stock,
+      num: [1,2,3.4],
+      sum: ''
     };
   },
   mounted() {
@@ -52,8 +60,25 @@ export default {
       this.stockInfo = this.stockInfo.filter((stock) =>{
         return stock.id !== id
       });
+    },
+  },
+  computed: {
+    totalPrices(){
+    let price = 0
+     this.stockInfo.map(p =>{
+       price += p.price * 1
+     })
+     return price;
+    },
+    totalStocks(){
+      let stocks = 0;
+      this.stockInfo.map(stock =>{
+        stocks += stock.count * 1
+      })
+      return stocks;
     }
   }
+
 };
 </script>
 

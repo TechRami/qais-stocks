@@ -9,18 +9,16 @@
         <td>{{ stock.count }}</td>
         <td :class="[{danger: stock.price < 0}, {success: stock.price > 0} ]">{{ stock.price }}</td>
         <td>{{ stock.cost }}</td>
-        <td>{{ stock.count * stock.price }}</td>
-        <td>{{ stock.count * stock.cost }}</td>
-        <td>{{ stock.count * stock.price - stock.count * stock.cost }}</td>
-        <td>
+        <td ref="totalPrice">{{ totalPrice }}</td>
+        <td ref="totalCost">{{ totalCost }}</td>
+        <td ref="stockChange">{{ stockChange }}</td>
+        <td ref="stockChangePer">
           %{{
-            ((stock.count * stock.price - stock.count * stock.cost) /
-              (stock.count * stock.price)) *
-            100
+             stockChangePer
           }}
         </td>
+        
       </tr>
-     
 </template>
 
 <script>
@@ -29,7 +27,8 @@ export default {
   data() {
     return {
        uri: "http://localhost:3000/stocks/" + this.stock.id,
-      light: false
+      light: false,
+     
     };
   },
   methods:{
@@ -41,7 +40,36 @@ export default {
    highlight(){
      this.light = !this.light
      console.log("highlight", this.light)
+   },
+  //  I STOPPED HERE
+  postTotals() {
+     fetch(this.uri, {
+      method: "POST",
+      headers: { "Content-Type": "application/json "},
+      body: JSON.stringify({ })
+     
+     })
    } 
+  },
+  computed: {
+    totalPrice() {
+    let totalPrice =  this.stock.count * this.stock.price
+    return totalPrice;
+    },
+    totalCost(){
+      let totalCost = this.stock.count * this.stock.cost
+      return totalCost
+    },
+    stockChange() {
+      let stockChange = this.stock.count * this.stock.price - this.stock.count * this.stock.cost
+      return stockChange
+    },
+    stockChangePer(){
+      let ChangePer =  ((this.stock.count * this.stock.price - this.stock.count * this.stock.cost) /
+              (this.stock.count * this.stock.price)).toFixed(5) *
+            100;
+            return ChangePer;
+    }
   }
  };
 
